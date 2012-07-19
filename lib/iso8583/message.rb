@@ -339,12 +339,14 @@ module ISO8583
       end
       
       # Parse the bytes `str` returning a message of the defined type.
+      # @raise ISO8583ParseException if field found that is not defined by the message type
       def parse(str)
         message = self.new
         message.mti, rest = _mti_format.parse(str)
         bmp,rest = Bitmap.parse(rest)
         bmp.each {|bit|
           bmp_def      = _definitions[bit]
+          raise ISO8583ParseException.new("Undefined bit field #{bit}") unless bmp_def
           value, rest  = bmp_def.field.parse(rest)
           message[bit] = value
         }
