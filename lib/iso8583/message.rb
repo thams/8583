@@ -346,7 +346,7 @@ module ISO8583
         bmp,rest = Bitmap.parse(rest)
         bmp.each {|bit|
           bmp_def      = _definitions[bit]
-          raise ISO8583ParseException.new("Undefined bit field #{bit}") unless bmp_def
+          raise ISO8583ParseException.new("Found undefined bit field #{bit}") unless bmp_def
           value, rest  = bmp_def.field.parse(rest)
           message[bit] = value
         }
